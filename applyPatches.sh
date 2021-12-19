@@ -1,30 +1,32 @@
-#!/bin/sh
+#!/bin/bash
 
 PS1="$"
 basedir=`pwd`
 echo "Rebuilding Forked projects.... "
 
-applyPatch() {
+function applyPatch {
     what=$1
     target=$2
     branch=$3
+    cd "$basedir/$what"
+    git fetch
+    git reset --hard "$branch"
+    git branch -f upstream >/dev/null
 
     cd "$basedir"
-    if [ ! -d  "$target" ]; then
-        git clone ../$what $target
+    if [ ! -d  "$basedir/$target" ]; then
+        git clone $1 $target -b upstream
     fi
     cd "$basedir/$target"
     echo "Resetting $target to $what..."
-    git config commit.gpgSign false
-    git remote rm origin >/dev/null 2>&1
-    git remote add origin ../../$what >/dev/null 2>&1
+    git remote rm upstream 2>/dev/null 2>&1
+    git remote add upstream ../$what >/dev/null 2>&1
     git checkout master >/dev/null 2>&1
-    git fetch origin >/dev/null 2>&1
-    git reset --hard $branch
-
+    git fetch upstream >/dev/null 2>&1
+    git reset --hard upstream/upstream
     echo "  Applying patches to $target..."
-    git am --abort >/dev/null 2>&1
-    git am --3way "../${what}-Patches/"*.patch
+    git am --abort
+    git am --3way "$basedir/${what}-Patches/"*.patch
     if [ "$?" != "0" ]; then
         echo "  Something did not apply cleanly to $target."
         echo "  Please review above details and finish the apply then"
