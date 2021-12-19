@@ -1,1 +1,15 @@
 
+From 3c468a7f0bafe05d07d89b6ecfc67d0d50fa499e Mon Sep 17 00:00:00 2001
+From: Poweruser <poweruser.rs@hotmail.com>
+Date: Fri, 14 Aug 2015 20:50:53 +0200
+Subject: [PATCH] POM Changes
+
+
+diff --git a/pom.xml b/pom.xml
+index 91627ff..45b1662 100644
+--- a/pom.xml
++++ b/pom.xml
+
+-- 
+1.8.3.msysgit.0
+
